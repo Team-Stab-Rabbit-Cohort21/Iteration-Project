@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-// require('dotenv').config();
 
 const weatherController = {};
 const API_KEY = process.env.WEATHER_API_KEY;
