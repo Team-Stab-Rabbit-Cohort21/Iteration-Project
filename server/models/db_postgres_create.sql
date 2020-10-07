@@ -1,6 +1,8 @@
 CREATE TABLE Users (
   _id SERIAL PRIMARY KEY,
-  username VARCHAR NOT NULL UNIQUE,
+  -- username VARCHAR NOT NULL UNIQUE,
+  first_name VARCHAR NOT NULL,
+  last_name VARCHAR NOT NULL,
   email VARCHAR NOT NULL UNIQUE,
   password VARCHAR NOT NULL,
   location VARCHAR DEFAULT 'NYC'

@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-// const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = 5000;
@@ -14,9 +13,6 @@ const weatherRouter = require('./routes/weather.js');
 const favoritesRouter = require('./routes/favorites.js');
 
 // application-level middleware
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

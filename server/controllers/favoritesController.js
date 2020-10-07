@@ -11,7 +11,7 @@ favoritesController.getFavBusinesses = (req, res, next) => {
     FROM businesses
       INNER JOIN user_fav_businesses
         ON businesses._id = user_fav_businesses.business_id
-    WHERE user_fav_businesses.user_id = ${user_id}`;
+    WHERE user_fav_businesses.user_id = $1`;
 
   // db.query(queryStr).then((data) => {
   //   // if (!data.rows[0]) {
