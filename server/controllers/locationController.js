@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-require('dotenv').config();
 
 const locationController = {};
 
@@ -21,7 +20,11 @@ locationController.getLocationData = (req, res, next) => {
 
       return next();
     })
-    .catch((error) => next({ log: `Error in locationController.getLocationData; ERROR: ${error}` }));
+    .catch((error) =>
+      next({
+        log: `Error in locationController.getLocationData; ERROR: ${error}`,
+      })
+    );
 };
 
 // get countrycode from google geocode api address_components section in results
@@ -40,7 +43,9 @@ locationController.getCountryCode = (req, res, next) => {
     res.locals.countryCode = null;
     return next();
   } catch (error) {
-    return next({ log: `Error in locationController.getLocationData; ERROR: ${error}` });
+    return next({
+      log: `Error in locationController.getLocationData; ERROR: ${error}`,
+    });
   }
 };
 
