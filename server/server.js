@@ -1,6 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = 5000;
@@ -10,16 +11,21 @@ const businessesRouter = require('./routes/businesses.js');
 const locationRouter = require('./routes/location.js');
 const newsRouter = require('./routes/news.js');
 const weatherRouter = require('./routes/weather.js');
+const favoritesRouter = require('./routes/favorites.js');
 
 // application-level middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // route handlers
 app.use('/businesses', businessesRouter);
 app.use('/location', locationRouter);
 app.use('/news', newsRouter);
 app.use('/weather', weatherRouter);
+app.use('/favorites', favoritesRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/build', express.static(path.resolve(__dirname, '..build')));
@@ -29,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // catch-all route handler
-app.use('*', (req, res) => (res.sendStatus(404)));
+app.use('*', (req, res) => res.sendStatus(404));
 
 // global error handler
 app.use((err, req, res, next) => {
