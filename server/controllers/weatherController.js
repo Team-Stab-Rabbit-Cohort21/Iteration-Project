@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-require('dotenv').config();
 
 const weatherController = {};
 const API_KEY = process.env.WEATHER_API_KEY;
@@ -12,8 +11,12 @@ weatherController.getWeather = async (req, res, next) => {
   // log error if latitude or longitude are undefined
   if (latitude === undefined || longitude === undefined) {
     return next({
-      log: 'weatherController.getWeather: ERROR: latitude and/or longitude are undefined',
-      message: { err: 'weatherController.getWeather: ERROR: Check server logs for details' },
+      log:
+        'weatherController.getWeather: ERROR: latitude and/or longitude are undefined',
+      message: {
+        err:
+          'weatherController.getWeather: ERROR: Check server logs for details',
+      },
     });
   }
 
