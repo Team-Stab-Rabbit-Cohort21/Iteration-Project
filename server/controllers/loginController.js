@@ -53,7 +53,7 @@ loginController.verifyCredentials = (req, res, next) => {
 
 loginController.CreateUser = (req, res, next) => {
   const queryString =
-  `INSERT INTO Users (username, email, password, location)
+  `INSERT INTO Users (firstName, lastName, email, password, location)
   VALUES (req.body.formFirstName, req.body.formLastName, req.body.formEmail, req.body.formPassword, req.body.formDefaultLocation)`
   db.query(queryString)
 }
