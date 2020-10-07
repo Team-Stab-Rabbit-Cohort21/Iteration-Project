@@ -47,14 +47,14 @@ loginController.verifyCredentials = (req, res, next) => {
     }
   })
   .catch(error) {
-    return next(`Account existed, error`)
+    return next(`Email taken!, ${error}`)
   }
 };
 
 loginController.CreateUser = (req, res, next) => {
-  let fullName = req.body.formFirstName + req.body.formLastName
-  const queryString = `INSERT INTO Users (username, email, password, location)
-  VALUES (fullName, req.body.formEmail, req.body.formPassword, req.body.formDefaultLocation)`
+  const queryString =
+  `INSERT INTO Users (username, email, password, location)
+  VALUES (req.body.formFirstName, req.body.formLastName, req.body.formEmail, req.body.formPassword, req.body.formDefaultLocation)`
   db.query(queryString)
 }
 
