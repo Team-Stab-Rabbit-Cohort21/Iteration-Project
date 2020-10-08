@@ -15,7 +15,7 @@ CREATE TABLE Businesses (
   rating INT,
   review VARCHAR,
   location VARCHAR,
-  image VARCHAR,
+  image_url VARCHAR,
   url VARCHAR,
   category VARCHAR
 )
@@ -23,7 +23,7 @@ CREATE TABLE Businesses (
 CREATE TABLE News (
   _id SERIAL PRIMARY KEY,
   url VARCHAR NOT NULL,
-  imgage VARCHAR,
+  urlToImage VARCHAR,
   title VARCHAR NOT NULL,
   source_name VARCHAR NOT NULL,
   category VARCHAR
@@ -33,8 +33,7 @@ CREATE TABLE user_fav_businesses (
   _id SERIAL PRIMARY KEY,
   user_id INT NOT NULL, 
   business_id VARCHAR NOT NULL,
-  -- saved_date DATE DEFAULT CURRENT_DATE,
-  -- commented out previous line bc eslint doesn't like it, but the current_date does work in postgresql
+  saved_date DATE DEFAULT CURRENT_DATE,
   FOREIGN KEY (user_id) REFERENCES users (_id),
   FOREIGN KEY (business_id) REFERENCES businesses (_id)
 )
@@ -43,7 +42,7 @@ CREATE TABLE user_fav_news (
   _id SERIAL PRIMARY KEY,
   user_id INT NOT NULL, 
   news_id INT NOT NULL,
-  -- saved_date DATE DEFAULT CURRENT_DATE,
+  saved_date DATE DEFAULT CURRENT_DATE,
   FOREIGN KEY (user_id) REFERENCES Users (_id),
   FOREIGN KEY (news_id) REFERENCES News (_id)
 )

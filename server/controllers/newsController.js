@@ -34,7 +34,11 @@ newsController.getNews = async (req, res, next) => {
       });
     })
     .catch((error) =>
-      next({ log: `Error in newsController.getNews; ERROR: ${error}` })
+      next({
+        message: `Error in newsController.getNews; ERROR: ${JSON.stringify(
+          error
+        )}`,
+      })
     );
   return next();
 };
