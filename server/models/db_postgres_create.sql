@@ -33,8 +33,7 @@ CREATE TABLE user_fav_businesses (
   _id SERIAL PRIMARY KEY,
   user_id INT NOT NULL, 
   business_id VARCHAR NOT NULL,
-  -- saved_date DATE DEFAULT CURRENT_DATE,
-  -- commented out previous line bc eslint doesn't like it, but the current_date does work in postgresql
+  saved_date DATE DEFAULT CURRENT_DATE,
   FOREIGN KEY (user_id) REFERENCES users (_id),
   FOREIGN KEY (business_id) REFERENCES businesses (_id)
 )
@@ -43,7 +42,7 @@ CREATE TABLE user_fav_news (
   _id SERIAL PRIMARY KEY,
   user_id INT NOT NULL, 
   news_id INT NOT NULL,
-  -- saved_date DATE DEFAULT CURRENT_DATE,
+  saved_date DATE DEFAULT CURRENT_DATE,
   FOREIGN KEY (user_id) REFERENCES Users (_id),
   FOREIGN KEY (news_id) REFERENCES News (_id)
 )
