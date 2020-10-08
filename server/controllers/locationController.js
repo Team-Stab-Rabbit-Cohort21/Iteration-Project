@@ -22,7 +22,9 @@ locationController.getLocationData = (req, res, next) => {
     })
     .catch((error) =>
       next({
-        log: `Error in locationController.getLocationData; ERROR: ${error}`,
+        message: `Error in locationController.getLocationData; ERROR: ${JSON.stringify(
+          error
+        )}`,
       })
     );
 };
@@ -44,7 +46,9 @@ locationController.getCountryCode = (req, res, next) => {
     return next();
   } catch (error) {
     return next({
-      log: `Error in locationController.getLocationData; ERROR: ${error}`,
+      message: `Error in locationController.getCountryCode; ERROR: ${JSON.stringify(
+        error
+      )}`,
     });
   }
 };
