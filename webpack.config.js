@@ -54,22 +54,7 @@ module.exports = {
       'Access-Control-Allow-Origin': '*',
     },
     proxy: {
-      '/businesses/**': {
-        target: 'http://localhost:5000',
-        secure: false,
-      },
-      '/location/**': {
-        target: 'http://localhost:5000',
-        secure: false,
-      },
-      '/news/**': {
-        target: 'http://localhost:5000',
-        secure: false,
-      },
-      '/weather/**': {
-        target: 'http://localhost:5000',
-        secure: false,
-      },
+      '/': 'http://localhost:5000',
     },
   },
 };

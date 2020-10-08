@@ -21,9 +21,6 @@ loginController.validInput = (req, res, next) => {
     typeof req.body.formPassword === 'string' &&
     req.body.formPassword.trim() !== '';
 
-  // const validDefaultLocation =
-  //   typeof req.body.formDefaultLocation === 'string' &&
-  //   req.body.formDefaultLocation.trim() !== '';
   if (err) {
     return next(`validInput Error, ${err}`);
   } else {
@@ -41,6 +38,7 @@ loginController.validInput = (req, res, next) => {
 
 // check if the account had been established by checking if the email is already in the database
 loginController.verifyCredentials = (req, res, next) => {
+  console.log('post req to login body is', req);
   // data.rows
   // maybe do SELECT * FROM Users WHERE email = $1
   // db.query(queryString, [req.body.formEmail])
@@ -66,15 +64,15 @@ loginController.verifyCredentials = (req, res, next) => {
 
 // create user controller
 loginController.createUser = (req, res, next) => {
-  // console.log('req.body', req.body);
+  console.log('req.body', req.body);
   // console.log('formPassword', req.body.formPassword);
   bcrypt.hash(req.body.formPassword, SALT_WORK_FACTOR, (err, hash) => {
     // req.body.formPassword = hash;
     if (err) return next('HASH FUNCTION ERROR', err);
     // console.log('THIS IS THE HASHED PASSWORD: ', req.body.formPassword);
     // console.log(encryptedPass);
-    // console.log('this is the hased pw', hash);
-    // console.log('type of pash is', typeof hash);
+    // console.log('this is the hashed pw', hash);
+    // console.log('type of hash is', typeof hash);
     const queryString = `INSERT INTO Users (first_name, last_name, email, password, location)
       VALUES ('TEST4formFirstName', 'TEST4formLastName', 'TEST4formEmail', '${hash}', 'TEST4formDefaultLocation')
       RETURNING *`;
