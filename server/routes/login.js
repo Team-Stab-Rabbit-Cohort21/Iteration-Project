@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
   res.send('this is what you should see');
 });
 
-router.post('/', loginController.verifyCredentials, (req, res) => {
+router.post('/', loginController.createUser, (req, res) => {
   res.send('THIS IS THE RESPONSE');
 });
 

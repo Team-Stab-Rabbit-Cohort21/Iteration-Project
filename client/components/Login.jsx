@@ -6,6 +6,10 @@ import Tab from 'react-bootstrap/Tab';
 import { Link } from 'react-router-dom';
 
 function Login() {
+  const onLogInSubmit = () => {
+    alert('hello!');
+  };
+
   return (
     <div className='container signup-login-container'>
       <h1>Welcome!</h1>
@@ -45,7 +49,7 @@ function Login() {
           </Form>
         </Tab>
         <Tab eventKey='login' title='Log In'>
-          <Form className='signup-login-form'>
+          <Form className='signup-login-form' onSubmit={onLogInSubmit}>
             <Form.Group controlId='formEmail'>
               <Form.Label>Email address</Form.Label>
               <Form.Control type='email' placeholder='Enter email' />
