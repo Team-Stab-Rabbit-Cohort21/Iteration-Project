@@ -15,7 +15,7 @@ CREATE TABLE Businesses (
   rating INT,
   review VARCHAR,
   location VARCHAR,
-  image VARCHAR,
+  image_url VARCHAR,
   url VARCHAR,
   category VARCHAR
 )
@@ -23,7 +23,7 @@ CREATE TABLE Businesses (
 CREATE TABLE News (
   _id SERIAL PRIMARY KEY,
   url VARCHAR NOT NULL,
-  imgage VARCHAR,
+  urlToImage VARCHAR,
   title VARCHAR NOT NULL,
   source_name VARCHAR NOT NULL,
   category VARCHAR
