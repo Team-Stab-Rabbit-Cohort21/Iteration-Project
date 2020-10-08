@@ -1,11 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import { Link } from 'react-router-dom';
+
+const useInput = (init) => {
+  const [value, setValue] = useState(init);
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
+  return [value, onChange];
+};
 
 function Login() {
+  const [email, emailOnChange] = useInput('');
+  const [password, passwordOnChange] = useInput('');
+
+  const onLoginSubmit = () => {
+    alert(email);
+    const body = {
+      email,
+      password,
+    };
+    console.log('login submit body is', body);
+
+    fetch('/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'Application/JSON',
+      },
+      body: JSON.stringify(body),
+      // body.json(),
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log('response from login POST', data);
+        props.history.push('/'); // returns to path '/'
+        // location.reload();
+      })
+      .catch((err) => console.log('Login fetch /login: ERROR: ', err));
+  };
   return (
     <div className="container signup-login-container">
       <h1>Welcome!</h1>
@@ -40,15 +75,31 @@ function Login() {
           </Form>
         </Tab>
         <Tab eventKey="login" title="Log In">
-          <Form className="signup-login-form">
+          <Form
+            className="signup-login-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onLoginSubmit();
+            }}
+          >
             <Form.Group controlId="formEmail">
               <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={emailOnChange}
+              />
             </Form.Group>
 
             <Form.Group controlId="formPassword">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={passwordOnChange}
+              />
             </Form.Group>
             <Button variant="primary" type="submit">
               Log In
