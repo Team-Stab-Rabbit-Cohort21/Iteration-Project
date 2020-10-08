@@ -30,10 +30,10 @@ function Login() {
               </Form.Text>
             </Form.Group>
 
-            <Form.Group controlId='formDefaultLocation'>
+            {/* <Form.Group controlId='formDefaultLocation'>
               <Form.Label>Default Location</Form.Label>
               <Form.Control type='text' placeholder='Enter default location' />
-            </Form.Group>
+            </Form.Group> */}
 
             <Form.Group controlId='formPassword'>
               <Form.Label>Password</Form.Label>
