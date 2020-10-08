@@ -63,6 +63,7 @@ favoritesController.addFavBusiness = (req, res, next) => {
   let queryStr = `
     INSERT INTO Businesses (_id, name, url, rating, review_count, location, image_url)
     VALUES ( $1, $2, $3, $4, $5, $6, $7)
+    ON CONFLICT (_id) DO NOTHING
     RETURNING _id`;
 
   let values = [
@@ -77,11 +78,11 @@ favoritesController.addFavBusiness = (req, res, next) => {
 
   db.query(queryStr, values)
     .then((data) => {
-      if (!data.rows[0]) {
-        return next({
-          message: `database insertion from addFavBusiness1 returned undefined`,
-        });
-      }
+      // if (!data.rows[0]) {
+      //   return next({
+      //     message: `database insertion from addFavBusiness1 returned undefined`,
+      //   });
+      // }
       // now add to user_fav_businesses
       queryStr = `
         INSERT INTO user_fav_businesses (user_id, business_id)
@@ -99,6 +100,7 @@ favoritesController.addFavBusiness = (req, res, next) => {
       });
     })
     .catch((error) => {
+      console.log(error);
       return next({
         message: `Error in favoritesController.addFavBusiness; ERROR: ${JSON.stringify(
           error
