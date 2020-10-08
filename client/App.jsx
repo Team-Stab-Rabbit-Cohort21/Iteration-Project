@@ -8,6 +8,7 @@ import Login from './components/Login.jsx';
 import './styles.css';
 import DetailedWeather from './components/DetailedWeather.jsx';
 import FrontPage from './components/FrontPage.jsx';
+import Favorites from './components/Favorites.jsx';
 
 const App = props => {
   return (
@@ -25,6 +26,10 @@ const App = props => {
 
           <Route exact path={'/detailed-weather'}>
             <DetailedWeather />
+          </Route>
+
+          <Route exact path={'/favorites'}>
+            <Favorites />
           </Route>
         </Switch>
       </div>
