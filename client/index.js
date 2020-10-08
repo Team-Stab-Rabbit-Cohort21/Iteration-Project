@@ -7,9 +7,9 @@ import store from './store.js';
 
 render(
   <Provider store={store}>
-    <BrowserRouter >
+    <BrowserRouter>
       <App />
-    </BrowserRouter>,
+    </BrowserRouter>
   </Provider>,
-  document.getElementById('app'),
+  document.getElementById('app')
 );

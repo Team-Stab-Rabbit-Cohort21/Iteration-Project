@@ -21,11 +21,11 @@ const NewsView = (props) => {
       return (
         // TODO: transfer in-line styles to styles.css
         <Card key={`news-card-${i}`}>
-          <div className="card-img-container">
+          <div className='card-img-container'>
             <a href={newsInfo.url}>
               <Card.Img
-                className="card-img"
-                variant="top"
+                className='card-img'
+                variant='top'
                 src={newsInfo.urlToImage || DEFAULT_IMG}
               />
             </a>
@@ -93,8 +93,8 @@ const NewsView = (props) => {
       buttonsArray.push(
         <Button
           key={`b${i}`}
-          variant="dark"
-          className="btn-sm mx-1 my-3"
+          variant='dark'
+          className='btn-sm mx-1 my-3'
           onClick={changeCategory(CATEGORIES[i])}
         >
           {CATEGORIES[i]}
@@ -103,16 +103,16 @@ const NewsView = (props) => {
     }
 
     return (
-      <div className="news-container">
-        <h1 id="title">Local News Information</h1>
+      <div className='news-container'>
+        <h1 id='title'>Local News Information</h1>
         {buttonsArray}
-        <div className="cards-container">
+        <div className='cards-container'>
           <CardDeck>{currentArticles}</CardDeck>
         </div>
       </div>
     );
   } else {
-    return <h1 id="title">Fetching from database</h1>;
+    return <h1 id='title'>Fetching from database</h1>;
   }
 };
 export default connect(mapStateToProps, null)(NewsView);
