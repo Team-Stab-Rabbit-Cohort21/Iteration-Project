@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
+import FavoritesLink from './FavoritesLink.jsx';
 
 const mapStateToProps = ({
   informationReducer: { lat, long, countryCode, favorites, user_id },
@@ -70,7 +71,7 @@ const ActivitiesView = (props) => {
       props.deleteFromFavoriteOnClick(favObject);
 
       // DELETE using fetch
-      fetch(`${favoriteUrl}?user_id=${favObject.user_id}?business_id=${favObject.id}`, {
+      fetch(`${favoriteUrl}?user_id=${favObject.user_id}&business_id=${favObject.id}`, {
         method: 'DELETE',
       })
         .then((data) => {
@@ -84,7 +85,7 @@ const ActivitiesView = (props) => {
       props.addToFavoriteOnClick(favObject);
 
       // POST using fetch      
-      fetch(favoriteUrl, {
+      fetch(`${favoriteUrl}?user_id=${favObject.user_id}&business_id=${favObject.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -160,14 +161,7 @@ const ActivitiesView = (props) => {
         <h1 id="title">Local Activities Information</h1>
         <div className="activities-buttons">
           {buttonsArray}
-          <Link to={'/favorites'}>
-            <Button
-              className="mx-1 my-3"
-              variant="info"
-            >
-              Favorites
-            </Button>
-          </Link>
+          <FavoritesLink />
         </div>
         <div className="cards-container">
           <CardDeck>

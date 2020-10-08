@@ -11,7 +11,7 @@ const initialState = {
     events: {},
     news: {},
   },
-  user_id: 1,
+  user_id: 6,
 };
 
 const informationReducer = (state = initialState, action) => {

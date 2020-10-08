@@ -206,3 +206,7 @@
 .favorite-card {
   border: 5px solid green;
 }
+
+.activity-card {
+  max-width: 300px;
+}

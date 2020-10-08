@@ -12,7 +12,7 @@ favoritesController.getFavBusinesses = (req, res, next) => {
   const { _id } = res.locals.user;
 
   const queryStr = `
-    SELECT b._id AS id, b.name, b.rating, b.review, b.location, b.image_url, b.url
+    SELECT b._id AS id, b.name, b.rating, b.review_count, b.location, b.image_url, b.url
     FROM businesses AS b
       INNER JOIN user_fav_businesses
         ON b._id = user_fav_businesses.business_id
@@ -51,17 +51,17 @@ favoritesController.getFavBusinesses = (req, res, next) => {
 favoritesController.addFavBusiness = (req, res, next) => {
   const { user_id, business_id } = req.query;
   console.log(
-    'from addFav, user_id and business_id with reqBody',
+    'from addFav, user_id and business_id with reqBody:',
     user_id,
     business_id,
     req.body
   );
-  const { id, name, url, rating, review, location, image_url } = req.body;
+  const { id, name, url, rating, review_count, location, image_url } = req.body;
 
   // insert business into Businesses table
   // what happens if value is undefined?
   let queryStr = `
-    INSERT INTO Businesses (_id, name, url, rating, review, location, image_url)
+    INSERT INTO Businesses (_id, name, url, rating, review_count, location, image_url)
     VALUES ( $1, $2, $3, $4, $5, $6, $7)
     RETURNING _id`;
 
@@ -70,7 +70,7 @@ favoritesController.addFavBusiness = (req, res, next) => {
     name,
     url,
     rating,
-    review,
+    review_count,
     JSON.stringify(location),
     image_url,
   ];
@@ -136,14 +136,14 @@ favoritesController.updateFavBusiness = (req, res, next) => {
         name,
         image_url,
         url,
-        review: review_count,
+        review_count,
         rating,
         location,
       }.catch((err) => next(err));
       // update the businesses table
 
       let queryStr = `
-      INSERT INTO Businesses (_id, name, image_url, url, review, rating, location)
+      INSERT INTO Businesses (_id, name, image_url, url, review_count, rating, location)
       VALUES ($1, $2, $3, $4, $5, $6, $7)`;
       db.query(queryStr, [
         id,
