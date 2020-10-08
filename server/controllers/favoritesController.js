@@ -11,19 +11,18 @@ favoritesController.getFavBusinesses = (req, res, next) => {
   // if using this middleware when loggin/signing in - should be somewhere in the res.locals.user
   const { _id } = res.locals.user;
 
-  // SELECT businesses.*, user_fav_businesses AS entry_id
   const queryStr = `
     SELECT b._id AS id, b.name, b.rating, b.review, b.location, b.image_url, b.url
     FROM businesses AS b
       INNER JOIN user_fav_businesses
-        ON businesses._id = user_fav_businesses.business_id
+        ON b._id = user_fav_businesses.business_id
     WHERE user_fav_businesses.user_id = $1`;
 
   db.query(queryStr, [_id])
     .then((data) => {
       if (!data.rows[0]) {
         return next({
-          log: `database query from getFavBusiness returned undefined`,
+          message: `database query from getFavBusiness returned undefined`,
         });
       }
       // organize data into to an object
@@ -40,9 +39,11 @@ favoritesController.getFavBusinesses = (req, res, next) => {
       console.log('favBusiness is an obj of objs', res.locals.favBusinesses);
       return next();
     })
-    .catch((err) => {
+    .catch((error) => {
       return next({
-        log: `Error in favoritesController.getLocationData; ERROR: ${err}`,
+        message: `Error in favoritesController.getLocationData; ERROR: ${JSON.stringify(
+          error
+        )}`,
       });
     });
 };
@@ -78,7 +79,7 @@ favoritesController.addFavBusiness = (req, res, next) => {
     .then((data) => {
       if (!data.rows[0]) {
         return next({
-          log: `database insertion from addFavBusiness1 returned undefined`,
+          message: `database insertion from addFavBusiness1 returned undefined`,
         });
       }
       // now add to user_fav_businesses
@@ -91,15 +92,17 @@ favoritesController.addFavBusiness = (req, res, next) => {
       db.query(queryStr, values).then((data) => {
         if (!data.rows[0]) {
           return next({
-            log: `database insertion from addFavBusiness2 returned undefined`,
+            message: `database insertion from addFavBusiness2 returned undefined`,
           });
         }
         return next();
       });
     })
-    .catch((err) => {
+    .catch((error) => {
       return next({
-        log: `Error in favoritesController.addFavBusiness; ERROR: ${err}`,
+        message: `Error in favoritesController.addFavBusiness; ERROR: ${JSON.stringify(
+          error
+        )}`,
       });
     });
 };
@@ -178,15 +181,17 @@ favoritesController.deleteFavBusiness = (req, res, next) => {
     RETURNING _id;`;
 
   const values = [user_id, business_id];
-  db.query(queryStr)
+  db.query(queryStr, values)
     .then((data) => {
       console.log(data.rows.length + 'entries deleted');
       res.locals.message = 'deletion success';
       return next();
     })
-    .catch((err) => {
+    .catch((error) => {
       return next({
-        log: `Error in favoritesController.deleteFavBusiness; ERROR: ${err}`,
+        message: `Error in favoritesController.deleteFavBusiness; ERROR: ${JSON.stringify(
+          error
+        )}`,
       });
     });
 };
@@ -205,7 +210,7 @@ favoritesController.getFavNews = (req, res, next) => {
     .then((data) => {
       if (!data.rows[0]) {
         return next({
-          log: `database query from getFavBusiness returned undefined`,
+          message: `database query from getFavBusiness returned undefined`,
         });
       }
 
@@ -216,9 +221,11 @@ favoritesController.getFavNews = (req, res, next) => {
       console.log('favNews is an obj of objs', res.locals.favNews);
       return next();
     })
-    .catch((err) => {
+    .catch((error) => {
       return next({
-        log: `Error in favoritesController.getFavNews; ERROR: ${err}`,
+        message: `Error in favoritesController.getFavNews; ERROR: ${JSON.stringify(
+          error
+        )}`,
       });
     });
 };
@@ -242,15 +249,13 @@ favoritesController.deleteFavNews = (req, res, next) => {
       res.locals.message = 'deletion success';
       return next();
     })
-    .catch((err) => {
+    .catch((error) => {
       return next({
-        log: `Error in favoritesController.deleteFavNews; ERROR: ${err}`,
+        message: `Error in favoritesController.deleteFavNews; ERROR: ${JSON.stringify(
+          error
+        )}`,
       });
     });
 };
 
 module.exports = favoritesController;
-
-// return next({
-//   log: `Error in favoritesController.getFavNews; ERROR: ${err}`,
-// });
