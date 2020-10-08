@@ -14,3 +14,13 @@ export const addWeather = (data) => ({
   type: types.ADD_WEATHER,
   payload: data,
 });
+
+export const addFavorite = (data) => ({
+  type: types.ADD_FAVORITE,
+  payload: data,
+});
+
+export const deleteFavorite = (data) => ({
+  type: types.DELETE_FAVORITE,
+  payload: data,
+});
