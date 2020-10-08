@@ -9,6 +9,7 @@ const initialState = {
   favorites: {
     businesses: {},
     events: {},
+    news: {},
   },
   user_id: 1,
 };
@@ -19,6 +20,7 @@ const informationReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.ADD_CITY:
       return {
+        ...state,
         city: action.payload.city,
         lat: action.payload.latitude,
         long: action.payload.longitude,

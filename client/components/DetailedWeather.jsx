@@ -11,10 +11,11 @@ import * as actions from '../actions/actions.js'
 // });
 
 const mapStateToProps = ({
-  informationReducer: { weatherDays }
-}) => ({ weatherDays });
+  informationReducer: { weatherDays, favorites }
+}) => ({ weatherDays, favorites });
 
 const DetailedWeather = props => {
+  console.log(props);
   const WEATHER_API_URI = '#';
   const weatherInfo = {
     dayName: 'Monday',

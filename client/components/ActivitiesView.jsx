@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Button from 'react-bootstrap/Button';
+import { Link } from 'react-router-dom';
 
 const mapStateToProps = ({
   informationReducer: { lat, long, countryCode, favorites, user_id },
@@ -29,9 +30,9 @@ const ActivitiesView = (props) => {
       // if in favorites, add a different css class
       let className = 'activity-card';
       // TODO: the state of favorites becomes undefined after searching
-      // if (isFavorite(activitiesInfo.id)) {
-      //   className += ' favorite-card';
-      // }
+      if (isFavorite(activitiesInfo.id)) {
+        className += ' favorite-card';
+      }
 
       return (
         <Card key={`activities-card-${i}`}
@@ -47,7 +48,7 @@ const ActivitiesView = (props) => {
               Rating: {activitiesInfo.rating}
             </Card.Text>
             <Card.Text>
-              Reviews: {activitiesInfo.review}
+              Reviews Count: {activitiesInfo.review_count}
             </Card.Text>
             <Card.Text>
               Location: {activitiesInfo.location.address1}
@@ -57,7 +58,6 @@ const ActivitiesView = (props) => {
       );
     });
   };
-
 
   const handleFavToggle = (data) => {
     const { name, id, image_url, url, rating, review_count, location } = data;
@@ -100,7 +100,6 @@ const ActivitiesView = (props) => {
     }
     // console.log(`Businesses: ${JSON.stringify(props.favorites.businesses)} and id: ${id} `);
   }
-
 
   const fetchData = (category = 'bars') => {
     const url = `/businesses/${category}?lat=${props.lat}&lon=${props.long}`;
@@ -161,13 +160,14 @@ const ActivitiesView = (props) => {
         <h1 id="title">Local Activities Information</h1>
         <div className="activities-buttons">
           {buttonsArray}
-          <Button
-            href='/favorites'
-            className="mx-1 my-3"
-            variant="info"
-          >
-            Favorites
-          </Button>
+          <Link to={'/favorites'}>
+            <Button
+              className="mx-1 my-3"
+              variant="info"
+            >
+              Favorites
+            </Button>
+          </Link>
         </div>
         <div className="cards-container">
           <CardDeck>
