@@ -11,7 +11,6 @@ router.get(
   locationsController.getLocationData,
   locationsController.getCountryCode,
   (req, res) => {
-    console.log('test test test test', req.body);
     const { latitude, longitude, countryCode } = res.locals;
     res.status(200).json({ latitude, longitude, countryCode });
   }

@@ -12,8 +12,8 @@ CREATE TABLE Users (
 CREATE TABLE Businesses (
   _id VARCHAR PRIMARY KEY, 
   name VARCHAR NOT NULL,
-  rating INT,
-  review VARCHAR,
+  rating DECIMAL,
+  review_count VARCHAR,
   location VARCHAR,
   image_url VARCHAR,
   url VARCHAR,

@@ -10,7 +10,7 @@ favoritesController.getFavBusinesses = (req, res, next) => {
   // const { user_id } = req.query;
   // if using this middleware when loggin/signing in - should be somewhere in the res.locals.user
   const { _id } = res.locals.user;
-
+  console.log('got id from user', _id);
   const queryStr = `
     SELECT b._id AS id, b.name, b.rating, b.review_count, b.location, b.image_url, b.url
     FROM businesses AS b
@@ -21,16 +21,9 @@ favoritesController.getFavBusinesses = (req, res, next) => {
   db.query(queryStr, [_id])
     .then((data) => {
       if (!data.rows[0]) {
-        return next({
-          message: `database query from getFavBusiness returned undefined`,
-        });
+        res.locals.favBusinesses = {};
+        return next();
       }
-      // organize data into to an object
-      // {
-      //   business_id (yelp id): {businessObj}
-      // }
-      // businessObj = {_id, name, url, ...}
-      // data.rows is an array of businessObj
       res.locals.favBusinesses = data.rows.reduce((obj, businessObj) => {
         businessObj.location = JSON.parse(businessObj.location);
         obj[businessObj._id] = businessObj;
@@ -50,21 +43,23 @@ favoritesController.getFavBusinesses = (req, res, next) => {
 
 favoritesController.addFavBusiness = (req, res, next) => {
   const { user_id, business_id } = req.query;
-  console.log(
-    'from addFav, user_id and business_id with reqBody:',
-    user_id,
-    business_id,
-    req.body
-  );
-  const { id, name, url, rating, review_count, location, image_url } = req.body;
+  // if (res.locals.update) {
+  //   const { id, name, url, rating, review_count, location, image_url } = res.locals.updatedBusiness;
+  // }
+  // else const { id, name, url, rating, review_count, location, image_url } = req.body;
+
+  const { id, name, url, rating, review_count, location, image_url } = res
+    .locals.update
+    ? res.locals.updatedBusiness
+    : req.body;
 
   // insert business into Businesses table
-  // what happens if value is undefined?
   let queryStr = `
     INSERT INTO Businesses (_id, name, url, rating, review_count, location, image_url)
     VALUES ( $1, $2, $3, $4, $5, $6, $7)
-    RETURNING _id`;
-
+    ON CONFLICT (_id) 
+    DO UPDATE SET
+    (name, url, rating, review_count, location, image_url) = (EXCLUDED.name, EXCLUDED.url, EXCLUDED.rating, EXCLUDED.review_count, EXCLUDED.location, EXCLUDED.image_url)`;
   let values = [
     id,
     name,
@@ -74,37 +69,41 @@ favoritesController.addFavBusiness = (req, res, next) => {
     JSON.stringify(location),
     image_url,
   ];
-
   db.query(queryStr, values)
     .then((data) => {
-      if (!data.rows[0]) {
-        return next({
-          message: `database insertion from addFavBusiness1 returned undefined`,
-        });
-      }
-      // now add to user_fav_businesses
-      queryStr = `
-        INSERT INTO user_fav_businesses (user_id, business_id)
-        VALUES ($1, $2)
-        RETURNING _id`;
-
-      values = [user_id, business_id];
-      db.query(queryStr, values).then((data) => {
-        if (!data.rows[0]) {
-          return next({
-            message: `database insertion from addFavBusiness2 returned undefined`,
+      console.log('insertion into businesses table returns', data.rows[0]);
+      if (!res.locals.update) {
+        queryStr = `
+          INSERT INTO user_fav_businesses (user_id, business_id)
+          VALUES ($1, $2)
+          RETURNING _id`;
+        values = [user_id, business_id];
+        db.query(queryStr, values)
+          .then((data) => {
+            if (!data.rows[0]) {
+              return next({
+                message: `database insertion from addFavBusiness2 returned undefined`,
+              });
+            }
+            console.log(
+              'insert into user_fav_business returns _id',
+              data.rows[0]
+            );
+            return next();
+          })
+          .catch((error) => {
+            console.log(error);
+            return next({
+              message: `Error in favoritesController.addFavBusiness; ERROR: ${JSON.stringify(
+                error
+              )}`,
+            });
           });
-        }
+      } else {
         return next();
-      });
+      }
     })
-    .catch((error) => {
-      return next({
-        message: `Error in favoritesController.addFavBusiness; ERROR: ${JSON.stringify(
-          error
-        )}`,
-      });
-    });
+    .catch((err) => next(err));
 };
 
 favoritesController.updateFavBusiness = (req, res, next) => {
@@ -131,7 +130,8 @@ favoritesController.updateFavBusiness = (req, res, next) => {
         categories,
         location,
       } = data;
-      res.locals.businessInfo = {
+
+      res.locals.updatedBusiness = {
         id,
         name,
         image_url,
@@ -139,37 +139,30 @@ favoritesController.updateFavBusiness = (req, res, next) => {
         review_count,
         rating,
         location,
-      }.catch((err) => next(err));
-      // update the businesses table
+      };
 
-      let queryStr = `
-      INSERT INTO Businesses (_id, name, image_url, url, review_count, rating, location)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)`;
-      db.query(queryStr, [
-        id,
-        name,
-        image_url,
-        url,
-        review_count,
-        rating,
-        JSON.stringify(location),
-      ])
-        .then((data) => {
-          // update the user_fav_businesses table
-          let queryStr = `
-            INSERT INTO user_fav_businesses (user_id, business_id)
-            VALUES ($1, $2)
-            RETURNING _id`;
-          db.query(queryStr, [user_id, business_id])
-            .then((data) => {
-              console.log('user_fav_businesses id', data.row[0]);
-              return next();
-            })
-            .catch((err) => next(err));
-        })
-        .catch((err) => next(err));
-    });
-  return next();
+      res.locals.update = true;
+
+      // go to the addFavBusiness controller
+      return next();
+    })
+    .catch((err) => next(err));
+};
+
+favoritesController.updateFavBusiness2 = (req, res, next) => {
+  const { user_id, business_id } = req.query;
+  let queryStr = `
+    UPDATE user_fav_businesses 
+    SET saved_date = CURRENT_DATE
+    WHERE user_id = $1 AND business_id = $2
+    RETURNING *`;
+
+  db.query(queryStr, [user_id, business_id])
+    .then((data) => {
+      console.log('updated combined table', data.row[0]);
+      return next();
+    })
+    .catch((err) => next(err));
 };
 
 favoritesController.deleteFavBusiness = (req, res, next) => {
@@ -183,7 +176,7 @@ favoritesController.deleteFavBusiness = (req, res, next) => {
   const values = [user_id, business_id];
   db.query(queryStr, values)
     .then((data) => {
-      console.log(data.rows.length + 'entries deleted');
+      console.log(data.rows[0] + '_id deleted');
       res.locals.message = 'deletion success';
       return next();
     })
@@ -235,27 +228,26 @@ favoritesController.addFavNews = (req, res, next) => {
 };
 
 favoritesController.deleteFavNews = (req, res, next) => {
-  const { user_id, news_id } = req.query;
-
-  const queryStr = `
-    DELETE FROM user_fav_businesses
-    WHERE user_id = $1 AND business_id = $2
-    RETURNING _id;`;
-
-  const values = [user_id, news_id];
-  db.query(queryStr, values)
-    .then((data) => {
-      console.log(data.rows.length + 'entries deleted');
-      res.locals.message = 'deletion success';
-      return next();
-    })
-    .catch((error) => {
-      return next({
-        message: `Error in favoritesController.deleteFavNews; ERROR: ${JSON.stringify(
-          error
-        )}`,
-      });
-    });
+  // probably wrong, need to follow example in
+  // const { user_id, news_id } = req.query;
+  // const queryStr = `
+  //   DELETE FROM user_fav_businesses
+  //   WHERE user_id = $1 AND business_id = $2
+  //   RETURNING _id;`;
+  // const values = [user_id, news_id];
+  // db.query(queryStr, values)
+  //   .then((data) => {
+  //     console.log(data.rows.length + 'entries deleted');
+  //     res.locals.message = 'deletion success';
+  //     return next();
+  //   })
+  //   .catch((error) => {
+  //     return next({
+  //       message: `Error in favoritesController.deleteFavNews; ERROR: ${JSON.stringify(
+  //         error
+  //       )}`,
+  //     });
+  //   });
 };
 
 module.exports = favoritesController;
