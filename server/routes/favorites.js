@@ -27,9 +27,15 @@ router.post('/business', favoritesController.addFavBusiness, (req, res) => {
 // saved favorite business info outdated - should fetch current info from yelp to return to user
 // need user_id and business_id from query
 // should this be with favoritesControllers or businessesControllers?
-router.get('/business', favoritesController.updateFavBusiness, (req, res) => {
-  res.status(200).json(res.locals.businessInfo);
-});
+router.get(
+  '/business',
+  favoritesController.updateFavBusiness,
+  favoritesController.addFavBusiness,
+  favoritesController.updateFavBusiness2,
+  (req, res) => {
+    res.status(200).json(res.locals.businessInfo);
+  }
+);
 
 // delete favorite business - remove entry in user_fav_business - might have to consider deletion cascade
 // need user_id and business_id from query
